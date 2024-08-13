@@ -3,6 +3,10 @@ from django.core.exceptions import ValidationError
 from my_tags.models import Tag
 from django.utils import timezone
 import uuid
+<<<<<<< Updated upstream
+=======
+from django.db.models import JSONField
+>>>>>>> Stashed changes
 
 def generate_serial_number():
     return str(uuid.uuid4())
@@ -12,9 +16,11 @@ class PressureSensor(models.Model):
     installation_date = models.DateTimeField(default=timezone.now)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    serial_number = models.CharField(max_length=100, unique=True,null=True,default=generate_serial_number,editable=False)
+    serial_number = models.CharField(max_length=150, unique=True , editable=False) 
     tags = models.ManyToManyField(Tag, blank=True)
     
+    configuration = JSONField(default=dict)  # sets an empty dictionary as the default value
+
     def clean(self):
         super().clean()  
         if not self.label.startswith('PSSR'):
@@ -27,7 +33,7 @@ class PressureReading(models.Model):
     sensor = models.ForeignKey(PressureSensor, on_delete=models.CASCADE)
     datetime = models.DateTimeField()
     value = models.FloatField()
-    tags = models.ManyToManyField(Tag, blank=True)
+    tags = models.ManyToManyField(Tag)
 
     def __str__(self):
         return f'{self.sensor.label} - {self.datetime} - {self.value}'
