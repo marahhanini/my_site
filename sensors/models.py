@@ -28,6 +28,7 @@ class PressureReading(models.Model):
     datetime = models.DateTimeField()
     value = models.FloatField()
     tags = models.ManyToManyField(Tag, blank=True)
+    raw_value = models.FloatField(null=True) 
 
     def __str__(self):
         return f'{self.sensor.label} - {self.datetime} - {self.value}'
