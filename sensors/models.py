@@ -3,12 +3,7 @@ from django.core.exceptions import ValidationError
 from my_tags.models import Tag
 from django.utils import timezone
 import uuid
-<<<<<<< Updated upstream
-=======
 from django.db.models import JSONField
->>>>>>> Stashed changes
-from django.contrib.postgres.fields import JSONField
-
 
 def generate_serial_number():
     return str(uuid.uuid4())
@@ -20,9 +15,8 @@ class PressureSensor(models.Model):
     longitude = models.FloatField()
     serial_number = models.CharField(max_length=150, unique=True , editable=False) 
     tags = models.ManyToManyField(Tag, blank=True)
-    
+
     configuration = JSONField(default=dict)  # sets an empty dictionary as the default value
-    configuration = JSONField()
 
     def clean(self):
         super().clean()  
