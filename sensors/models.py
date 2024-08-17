@@ -5,6 +5,8 @@ from django.utils import timezone
 import uuid
 from django.db.models import JSONField
 
+
+
 def generate_serial_number():
     return str(uuid.uuid4())
 
@@ -30,6 +32,7 @@ class PressureReading(models.Model):
     sensor = models.ForeignKey(PressureSensor, on_delete=models.CASCADE)
     datetime = models.DateTimeField()
     value = models.FloatField()
+    tags = models.ManyToManyField(Tag)
     tags = models.ManyToManyField(Tag)
     raw_value = models.FloatField(null=True) 
 
