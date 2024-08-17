@@ -1,13 +1,21 @@
+<<<<<<< Updated upstream
+=======
 asgiref==3.8.1
 attrs==24.2.0
 Django==5.0.7
 django-filter==24.2
+django-seed==0.3.1
 djangorestframework==3.15.2
+Faker==26.3.0
 jsonschema==4.23.0
 jsonschema-specifications==2023.12.1
-pip==24.1.2
+pip==24.2
 psycopg2-binary==2.9.9
+python-dateutil==2.9.0.post0
 referencing==0.35.1
 rpds-py==0.20.0
+six==1.16.0
 sqlparse==0.5.1
+toposort==1.10
 tzdata==2024.1
+>>>>>>> Stashed changes
