@@ -24,15 +24,18 @@ def aggregate_pressure_readings(request):
     except ValueError:
         return JsonResponse({'error': 'Invalid date format'}, status=400)
 
+    if since_dt >= until_dt:
+        return JsonResponse({'error': 'The until date must be after the since date'}, status=400)
+
     if calculation not in ['sum', 'avg']:
         return JsonResponse({'error': 'Invalid calculation parameter'}, status=400)
 
     readings = PressureReading.objects.filter(datetime__gte=since_dt, datetime__lte=until_dt)
 
     if calculation == 'sum':
-        result = readings.aggregate(total=Sum('value'))['total']
+        result = readings.aggregate(total=Sum('value'))['total'] or 0
     elif calculation == 'avg':
-        result = readings.aggregate(average=Avg('value'))['average']
+        result = readings.aggregate(average=Avg('value'))['average'] or 0
 
     return JsonResponse({'result': result})
 
@@ -51,15 +54,18 @@ class AggregatePressureReadingsView(APIView):
         except ValueError:
             return Response({'error': 'Invalid date format'}, status=status.HTTP_400_BAD_REQUEST)
 
+        if since_dt >= until_dt:
+            return Response({'error': 'The until date must be after the since date'}, status=status.HTTP_400_BAD_REQUEST)
+
         if calculation not in ['sum', 'avg']:
             return Response({'error': 'Invalid calculation parameter'}, status=status.HTTP_400_BAD_REQUEST)
 
         readings = PressureReading.objects.filter(datetime__gte=since_dt, datetime__lte=until_dt)
 
         if calculation == 'sum':
-            result = readings.aggregate(total=Sum('value'))['total']
+            result = readings.aggregate(total=Sum('value'))['total'] or 0
         elif calculation == 'avg':
-            result = readings.aggregate(average=Avg('value'))['average']
+            result = readings.aggregate(average=Avg('value'))['average'] or 0
 
         return Response({'result': result})
 
