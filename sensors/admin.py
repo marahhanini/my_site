@@ -1,4 +1,3 @@
-# sensors/admin.py
 from django.contrib import admin
 from .models import PressureSensor, PressureReading
 from .forms import PressureSensorForm, PressureReadingForm
@@ -18,13 +17,13 @@ class PressureSensorAdmin(admin.ModelAdmin):
     readonly_fields = ('serial_number',) 
     inlines = [TaggedItemInline]
     
-    def save_model (self ,request ,obj ,form ,change):
+    def save_model(self, request, obj, form, change):
         if not obj.serial_number:
             obj.serial_number = uuid.uuid4()
-        obj.full_clean()
-        super().save_model(request,obj,form,change)
+        obj.full_clean()  
+        super().save_model(request, obj, form, change)
         # Handle save tags
-        TaggedItem.objects.filter(content_type__model='pressuresensor',object_id=obj.id).delete()
+        TaggedItem.objects.filter(content_type__model='pressuresensor', object_id=obj.id).delete()
         for tag in form.cleaned_data.get('tags', []):
             TaggedItem.objects.create(tag=tag, content_object=obj)
 
@@ -37,8 +36,9 @@ class PressureReadingAdmin(admin.ModelAdmin):
     inlines = [TaggedItemInline]
     
     def save_model(self, request, obj, form, change):
+        obj.full_clean()  
         super().save_model(request, obj, form, change)
         # Handle save tags
-        TaggedItem.objects.filter(content_type__model='pressurereading',object_id=obj.id).delete()
+        TaggedItem.objects.filter(content_type__model='pressurereading', object_id=obj.id).delete()
         for tag in form.cleaned_data.get('tags', []):
             TaggedItem.objects.create(tag=tag, content_object=obj)

@@ -3,8 +3,7 @@ from django.core.exceptions import ValidationError
 from my_tags.models import Tag
 from django.utils import timezone
 import uuid
-from django.contrib.postgres.fields import JSONField
-
+from django.db.models import JSONField
 
 def generate_serial_number():
     return str(uuid.uuid4())
