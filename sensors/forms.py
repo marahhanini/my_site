@@ -1,8 +1,10 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import PressureSensor, PressureReading
-from jsonschema import validate, ValidationError as JSONSchemaValidationError
+from jsonschema import ValidationError as JSONSchemaValidationError
+from jsonschema import validate
+
 from .constants import CONFIGURATION_SCHEMA
+from .models import PressureReading, PressureSensor
 
 
 class PressureSensorForm(forms.ModelForm):
@@ -21,8 +23,9 @@ class PressureSensorForm(forms.ModelForm):
         try:
             validate(instance=configuration, schema=CONFIGURATION_SCHEMA)
         except JSONSchemaValidationError as e:
-            raise ValidationError(f"Invalid configuration: {e.message}")
+            raise ValidationError(f"Invalid configuration: {e.message}") from e
         return configuration
+
 
 class PressureReadingForm(forms.ModelForm):
     class Meta:

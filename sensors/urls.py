@@ -1,7 +1,6 @@
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
 from .views import PressureSensorViewSet, PressureReadingViewSet
-from django_filters.rest_framework import DjangoFilterBackend
 from .views import aggregate_pressure_readings, AggregatePressureReadingsView
 
 

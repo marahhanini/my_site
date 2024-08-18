@@ -1,7 +1,8 @@
 from django.test import TestCase
-from .models import PressureReading, PressureSensor
-from django.utils.dateparse import parse_datetime
 from django.urls import reverse
+from django.utils.dateparse import parse_datetime
+from .models import PressureReading, PressureSensor
+
 
 class AggregationAPITestCase(TestCase):
 
