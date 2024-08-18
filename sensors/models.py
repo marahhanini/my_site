@@ -1,10 +1,11 @@
-from django.db import models
-from django.core.exceptions import ValidationError
-from my_tags.models import Tag
-from django.utils import timezone
 import uuid
-from django.db.models import JSONField
 
+from django.core.exceptions import ValidationError
+from django.db import models
+from django.db.models import JSONField
+from django.utils import timezone
+
+from my_tags.models import Tag
 
 
 def generate_serial_number():
@@ -21,12 +22,11 @@ class PressureSensor(models.Model):
     configuration = JSONField(default=dict)  # sets an empty dictionary as the default value
 
     def clean(self):
-        super().clean()  
+        super().clean()
         if not self.label.startswith('PSSR'):
             raise ValidationError({'label': 'Label must start with the prefix "PSSR".'})
-        
     def __str__(self):
-        return self.label
+        return str(self.label)
 
 class PressureReading(models.Model):
     sensor = models.ForeignKey(PressureSensor, on_delete=models.CASCADE)
@@ -34,7 +34,7 @@ class PressureReading(models.Model):
     value = models.FloatField()
     tags = models.ManyToManyField(Tag)
     tags = models.ManyToManyField(Tag)
-    raw_value = models.FloatField(null=True) 
+    raw_value = models.FloatField(null=True)
 
     def __str__(self):
         return f'{self.sensor.label} - {self.datetime} - {self.value}'

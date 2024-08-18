@@ -1,10 +1,14 @@
 # sensors/admin.py
-from django.contrib import admin
-from .models import PressureSensor, PressureReading
-from .forms import PressureSensorForm, PressureReadingForm
-from my_tags.models import TaggedItem
-from django.contrib.contenttypes.admin import GenericTabularInline
 import uuid
+
+from django.contrib import admin
+from django.contrib.contenttypes.admin import GenericTabularInline
+
+from my_tags.models import TaggedItem
+
+from .forms import PressureReadingForm, PressureSensorForm
+from .models import PressureReading, PressureSensor
+
 
 class TaggedItemInline(GenericTabularInline):
     model = TaggedItem

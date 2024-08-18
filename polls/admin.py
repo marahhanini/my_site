@@ -1,7 +1,10 @@
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline
-from .models import Question, Choice
-from my_tags.models import Tag, TaggedItem
+
+from my_tags.models import TaggedItem
+
+from .models import Choice, Question
+
 
 class TaggedItemInline(GenericTabularInline):
     model = TaggedItem
