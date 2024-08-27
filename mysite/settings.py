@@ -25,15 +25,18 @@ SECRET_KEY = 'django-insecure-nwowmak)+=acs%y+%26%s#3b#59udt_41i0^@v1ngbl!y=43*w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
-# Application definition
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'test_schema.localhost',
+    'something.localhost',
+]
 
 INSTALLED_APPS = [
     'polls.apps.PollsConfig',
     'django_filters',
     'rest_framework',
+    'django_tenants',
     'sensors.apps.SensorsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,10 +48,37 @@ INSTALLED_APPS = [
     'blog',
     'django_seed',
 ]
-REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
-}
+TENANT_APPS = [
+    'my_tags',
+    'sensors',
+    'polls',
+]
+SHARED_APPS = [
+    'django_tenants',
+    'tenants',
+    'django.contrib.contenttypes',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+INSTALLED_APPS = SHARED_APPS + TENANT_APPS
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],   'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,9 +89,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'sensors.middleware.request_timer',
+    'django_tenants.middleware.TenantMiddleware',
 
 ]
-
 ROOT_URLCONF = 'mysite.urls'
 
 TEMPLATES = [
@@ -80,6 +110,8 @@ TEMPLATES = [
     },
 ]
 
+
+
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
 
@@ -88,7 +120,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django_tenants.postgresql_backend',
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': '12345',
@@ -97,6 +129,13 @@ DATABASES = {
     }
 }
 
+
+TENANT_MODEL = "tenants.Tenant"
+TENANT_DOMAIN_MODEL = "tenants.Domain"
+
+DATABASE_ROUTERS = (
+    'django_tenants.routers.TenantSyncRouter',
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
